@@ -1,0 +1,183 @@
+
+/**
+ * 时间格式化
+ */
+var DateFr = {
+    getDate: function (time) {
+      if (!time) return '';
+      var date = getDate(time);
+      var year = date.getFullYear()
+      var month = date.getMonth() + 1
+      var day = date.getDate()
+      var hour = date.getHours()
+      var minute = date.getMinutes()
+      var second = date.getSeconds()
+      return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':')
+    },
+    getDateQ: function (time) {
+        if (!time) return '';
+        var date = getDate(time);
+        var month = date.getMonth() + 1
+        var day = date.getDate()
+        return [month, day].map(formatNumber).join('-')
+      },
+      getDateH: function (time) {
+        if (!time) return '';
+        var date = getDate(time);
+        var hour = date.getHours()
+        var minute = date.getMinutes()
+        return [hour, minute].map(formatNumber).join(':')
+      }
+  }
+  
+      /**
+       * 格式化数据，两位小数
+       */
+  var Float2 = function(num) {
+          var sum = parseFloat(num);
+          if (sum) {
+              return sum.toFixed(2);
+          } else {
+              return '0.00'
+          }
+  
+      }
+      /**
+       * 补零
+       */
+  var formatNumber = function(n) {
+          n = n.toString()
+          return n[1] ? n : '0' + n
+      }
+      /**
+       * 手机号码格式化
+       */
+  var formatPhoneNum = function(arr) {
+      var arr1 = arr.substring(0, 3);
+      var arr2 = arr.substring(7);
+      return arr1 + '****' + arr2;
+  };
+  /**
+   * 
+   * @param str 显示26个字符
+   */
+  var formatText28 = function(str) {
+      if (str) {
+          if (str.length > 32) {
+              return str.substring(0, 26) + '...';
+          } else {
+              return str
+          }
+      }
+  };
+
+  /**
+   * 显示34个字符
+   */
+  var formatText34 = function(str) {
+      if (str) {
+          if (str.length > 34) {
+              return str.substring(0, 34) + '...';
+          } else {
+              return str
+          }
+      }
+  };
+  /**
+   * '待支付', '1',  'STATUS'
+'待发货', '2',  'STATUS'
+'买家关单', '3',  'STATUS'
+'卖家关单', '4',  'STATUS'
+'待确认', '5',  'STATUS'
+'待评价', '6',  'STATUS'
+'完成', '7',  'STATUS'
+'已退款', '13',  'STATUS'
+   * @param num order状态数据字典
+   */
+  var orderStuts = function(str){
+        var num = parseInt(str);
+        switch(num){
+            case 1:
+                return '待支付';
+                break;
+            case 2:
+                return '待发货';
+                break;
+            case 13:
+                return '买家关单';
+                break;
+            case 4:
+                return '卖家关单';
+                break;
+            case 5:
+                return '待确认';
+                break;
+            case 6:
+                return '待评价';
+                break;
+            case 7:
+                return '已完成';
+                break;
+            case 13:
+                return '商品库存不足';
+                break;
+        }
+  }
+  /**
+   * 
+   * @param str '未退款', '0',  'REFUND_STATUS',
+'退款中', '1',  'REFUND_STATUS',
+'已退款', '2',  'REFUND_STATUS',
+'已退款', '3',  'REFUND_STATUS',
+   */
+  var refundStutas = function(str){
+      var num = parseInt(str);
+      switch(num){
+        case 0:
+            return '未退款';
+            break;
+        case 1:
+            return '退款中';
+            break;
+        case 2:
+            return '已退款';
+            break;
+        case 3:
+            return '退款失败';
+            break;
+      }
+  }
+  
+  module.exports = {
+     formatTime: DateFr.getDate,
+     getDateQ: DateFr.getDateQ,
+     getDateH: DateFr.getDateH,
+      formatNumber: formatNumber,
+      Float2: Float2,
+      formatPhoneNum: formatPhoneNum,
+      formatText28: formatText28,
+      formatText34: formatText34,
+      orderStuts:orderStuts
+  }
+  /**
+   * REFUND_STATUS 未退款    0   UNREFUND
+REFUND_STATUS 退款中    1   REFUNDING
+REFUND_STATUS 已退款    2   REFUND
+REFUND_STATUS 退款失败    3   REFUND FAILED
+STATUS   待支付    1   UNPAID
+STATUS   待发货    2   NOT YET SHIPPED
+STATUS   买家关单    3   CLOSED ORDER BY BUYER
+STATUS   卖家关单    4   CLOSED ORDER BY SELLER
+STATUS   待确认    5   UNCONFIRMED
+STATUS   待评价    6   NOT APPRAISED
+STATUS   完成     7   END
+STATUS   商品库存不足   13   LOW STOCKS
+SOURCE_TYPE  平台商品购买   1   PLATFORM GOODS
+SOURCE_TYPE  代理商店铺购买  2   AGENT GOODS
+SOURCE_TYPE  有栗商品购买   3   YOULI GOODS
+ABROAD_FLAG  境外     2   OUTSIDE A COUNTRY
+ABROAD_FLAG  境内     1   CHURCHYARD
+checkStatus = 1  校验成功
+checkStatus = 2  库存不足
+checkStatus = 3  商品过期
+   */
