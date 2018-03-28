@@ -46,21 +46,24 @@ const Promise = require('./es6-promise');
     }
     function getAccessToken(){
         var date = new Date();
-        var dt = date.getTime();
-        var expires_in = wx.getStorageSync('expires_in');
-        if(dt >= expires_in && wx.getStorageSync('access_token') != 'wait'){
-            return onRefreshToken();
-        }else if(wx.getStorageSync('access_token') == 'wait'){
-            return new Promise((resolve,reject)=>{
-                setTimeout(()=>{
-                    resolve(wx.getStorageSync('access_token'))
-                },2000)
-            })
-        }else{
-            return new Promise((resolve,reject)=>{
+    var dt = date.getTime();
+    var expires_in = wx.getStorageSync('expires_in');
+    console.log(expires_in)
+    if (!expires_in) {
+        return onRefreshToken();
+    } else if (dt >= expires_in && wx.getStorageSync('access_token') != 'wait') {
+        return onRefreshToken();
+    } else if (wx.getStorageSync('access_token') == 'wait') {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
                 resolve(wx.getStorageSync('access_token'))
-            })
-        }
+            }, 2000)
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            resolve(wx.getStorageSync('access_token'))
+        })
+    }
     }
 module.exports={
     onLogin:onLogin,
